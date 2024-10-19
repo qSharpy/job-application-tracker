@@ -6,6 +6,8 @@ const cors = require('cors');
 require('dotenv').config();
 
 const jobApplicationRoutes = require('./routes/jobApplicationRoutes');
+const authRoutes = require('./routes/authRoutes');
+const auth = require('./middleware/auth');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -30,8 +32,11 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
 
-// Job Application routes
-app.use('/api/job-applications', jobApplicationRoutes);
+// Auth routes
+app.use('/api/auth', authRoutes);
+
+// Protected Job Application routes
+app.use('/api/job-applications', auth, jobApplicationRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
