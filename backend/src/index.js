@@ -7,7 +7,6 @@ require('dotenv').config();
 
 const jobApplicationRoutes = require('./routes/jobApplicationRoutes');
 const authRoutes = require('./routes/authRoutes');
-const auth = require('./middleware/auth');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -35,8 +34,8 @@ app.get('/health', (req, res) => {
 // Auth routes
 app.use('/api/auth', authRoutes);
 
-// Protected Job Application routes
-app.use('/api/job-applications', auth, jobApplicationRoutes);
+// Job Application routes (protected by auth middleware in the route file)
+app.use('/api/job-applications', jobApplicationRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

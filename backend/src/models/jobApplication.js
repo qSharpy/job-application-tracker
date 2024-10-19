@@ -1,3 +1,4 @@
+// backend/src/models/jobApplication.js
 
 const mongoose = require('mongoose');
 
@@ -11,7 +12,7 @@ const jobApplicationSchema = new mongoose.Schema({
     default: 'Applied'
   },
   notes: { type: String },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true } // We'll implement User model later
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 }, {
   timestamps: true
 });
