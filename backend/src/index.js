@@ -16,6 +16,16 @@ connection.once('open', () => {
   console.log("MongoDB database connection established successfully");
 })
 
+// Test route
+app.get('/', (req, res) => {
+  res.json({ message: "Welcome to the Job Application Tracker API" });
+});
+
+// Health check route
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'Server is running' });
+});
+
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
