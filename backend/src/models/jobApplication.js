@@ -12,7 +12,9 @@ const jobApplicationSchema = new mongoose.Schema({
     default: 'Applied'
   },
   notes: { type: String },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  interviewDate: { type: Date },
+  offerDate: { type: Date }
 }, {
   timestamps: true
 });

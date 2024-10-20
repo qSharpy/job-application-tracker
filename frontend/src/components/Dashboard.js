@@ -13,6 +13,7 @@ import {
 } from '../services/api';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SubscribeButton from './SubscribeButton';
+import Analytics from './Analytics';
 
 const Dashboard = () => {
   const [applications, setApplications] = useState([]);
@@ -120,18 +121,14 @@ const Dashboard = () => {
       return (
         <div className="premium-features">
           <h3>Premium Features</h3>
-          <ul>
-            <li>Advanced Analytics</li>
-            <li>Email Reminders</li>
-            <li>Interview Preparation Tips</li>
-          </ul>
+          <Analytics />
         </div>
       );
     } else {
       return (
         <div className="upgrade-prompt">
           <h3>Upgrade to Premium</h3>
-          <p>Get access to advanced features!</p>
+          <p>Get access to advanced features and analytics!</p>
           <SubscribeButton />
         </div>
       );

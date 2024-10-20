@@ -6,6 +6,7 @@ require('dotenv').config();
 const jobApplicationRoutes = require('./routes/jobApplicationRoutes');
 const authRoutes = require('./routes/authRoutes');
 const stripeRoutes = require('./routes/stripeRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -30,6 +31,7 @@ connection.once('open', () => {
 app.use('/api/auth', authRoutes);
 app.use('/api/job-applications', jobApplicationRoutes);
 app.use('/api/stripe', stripeRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

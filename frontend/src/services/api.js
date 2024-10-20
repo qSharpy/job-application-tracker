@@ -43,5 +43,6 @@ export const deleteJobApplication = (id) => api.delete(`/job-applications/${id}`
 export const getUserData = () => api.get('/auth/user');
 
 export const verifySubscription = (sessionId) => api.post('/stripe/verify-subscription', { sessionId });
+export const getAnalytics = () => api.get('/analytics/dashboard');
 
 export default api;
