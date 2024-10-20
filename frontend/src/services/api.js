@@ -40,4 +40,6 @@ export const createJobApplication = (data) => api.post('/job-applications', data
 export const updateJobApplication = (id, data) => api.put(`/job-applications/${id}`, data);
 export const deleteJobApplication = (id) => api.delete(`/job-applications/${id}`);
 
+export const getUserData = () => api.get('/auth/user');
+
 export default api;

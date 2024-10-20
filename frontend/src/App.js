@@ -6,18 +6,21 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import Navigation from './components/Navigation';
+import './App.css';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Navigation />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/" element={<Navigate to="/login" />} />
-        </Routes>
+        <div className="container">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/" element={<Navigate to="/login" />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );

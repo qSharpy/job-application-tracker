@@ -1,0 +1,87 @@
+/* frontend/src/App.css */
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.container {
+  width: 80%;
+  margin: auto;
+  overflow: hidden;
+  padding: 0 20px;
+}
+
+nav {
+  background: #333;
+  color: #fff;
+  padding: 10px 0;
+}
+
+nav ul {
+  padding: 0;
+  list-style: none;
+}
+
+nav li {
+  display: inline;
+  padding: 0 20px;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+}
+
+h1, h2, h3 {
+  color: #333;
+}
+
+form {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'],
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+button {
+  display: inline-block;
+  border: none;
+  background: #333;
+  color: #fff;
+  padding: 7px 20px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #555;
+}
+
+.job-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.job-item {
+  background: #fff;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.error {
+  color: red;
+  margin-bottom: 10px;
+}
