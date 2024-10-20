@@ -1,5 +1,3 @@
-// backend/src/index.js
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -11,7 +9,12 @@ const authRoutes = require('./routes/authRoutes');
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+// CORS configuration
+app.use(cors({
+  origin: 'http://localhost:3000', // Allow only frontend origin
+  credentials: true, // Allow cookies if your app uses them
+}));
+
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -34,7 +37,7 @@ app.get('/health', (req, res) => {
 // Auth routes
 app.use('/api/auth', authRoutes);
 
-// Job Application routes (protected by auth middleware in the route file)
+// Job Application routes
 app.use('/api/job-applications', jobApplicationRoutes);
 
 app.listen(port, () => {

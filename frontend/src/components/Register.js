@@ -1,5 +1,3 @@
-// frontend/src/components/Register.js
-
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -22,10 +20,14 @@ const Register = () => {
     }),
     onSubmit: async (values) => {
       try {
-        await register(values.name, values.email, values.password);
+        console.log('Submitting registration:', values);
+        const response = await register(values.name, values.email, values.password);
+        console.log('Registration response:', response);
         navigate('/login');
       } catch (error) {
-        alert('Registration failed');
+        console.error('Registration error:', error);
+        console.error('Error details:', error.response ? error.response.data : error.message);
+        alert('Registration failed: ' + (error.response ? error.response.data.message : error.message));
       }
     },
   });
