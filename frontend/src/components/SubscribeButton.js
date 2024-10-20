@@ -1,28 +1,46 @@
 // frontend/src/components/SubscribeButton.js
 
-import React from 'react';
+import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import api from '../services/api';
 
-const stripePromise = loadStripe('your_stripe_publishable_key');
+const stripePromise = loadStripe('pk_test_51QBsLFRXAztidmbWYDUUxCzjJqmnPDwGPsFzmqpXkOv76NmiAoSLOh0SMixZH04rtlEGVnfx4vpc35d2T6VBwUx000dUuMiCTD');
 
 const SubscribeButton = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const handleClick = async (event) => {
-    const stripe = await stripePromise;
-    const response = await api.post('/stripe/create-checkout-session');
-    const session = response.data;
-    const result = await stripe.redirectToCheckout({
-      sessionId: session.sessionId,
-    });
-    if (result.error) {
-      console.error(result.error.message);
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const stripe = await stripePromise;
+      const response = await api.post('/stripe/create-checkout-session');
+      const { sessionId } = response.data;
+
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: sessionId,
+      });
+
+      if (error) {
+        setError(error.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setError(error.response?.data?.error || 'An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <button onClick={handleClick}>
-      Upgrade to Premium
-    </button>
+    <div>
+      <button onClick={handleClick} disabled={isLoading}>
+        {isLoading ? 'Processing...' : 'Upgrade to Premium'}
+      </button>
+      {error && <p style={{color: 'red'}}>{error}</p>}
+    </div>
   );
 };
 

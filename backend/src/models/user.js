@@ -7,7 +7,10 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   name: { type: String, required: true },
-  isPremium: { type: Boolean, default: false }
+  isPremium: { type: Boolean, default: false },
+  stripeCustomerId: { type: String },
+  stripeSubscriptionId: { type: String },
+  stripePlanId: { type: String }
 }, {
   timestamps: true
 });

@@ -8,46 +8,57 @@ import {
   createJobApplication,
   updateJobApplication,
   deleteJobApplication,
-  getUserData  // Add this line
+  getUserData,
+  verifySubscription
 } from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import SubscribeButton from './SubscribeButton';
 
 const Dashboard = () => {
   const [applications, setApplications] = useState([]);
+  const [user, setUser] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  useEffect(() => {
-    fetchApplications();
-  }, []);
-
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await getUserData();
-        setUser(response.data);
-      } catch (error) {
-        console.error('Error fetching user data', error);
-      }
-    };
-    fetchUserData();
-  }, []);
-
-  const fetchApplications = async () => {
+  const fetchData = async () => {
     try {
-      const response = await getJobApplications();
-      setApplications(response.data);
+      const [applicationsResponse, userResponse] = await Promise.all([
+        getJobApplications(),
+        getUserData()
+      ]);
+      setApplications(applicationsResponse.data);
+      setUser(userResponse.data);
     } catch (error) {
-      console.error('Error fetching applications', error);
+      console.error('Error fetching data', error);
+      setError('Failed to fetch data. Please try again.');
       if (error.response && error.response.status === 401) {
         navigate('/login');
-      } else {
-        setError('Failed to fetch applications. Please try again.');
       }
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+
+    // Check for successful Stripe checkout
+    const queryParams = new URLSearchParams(location.search);
+    const sessionId = queryParams.get('session_id');
+    if (sessionId) {
+      handleSubscriptionVerification(sessionId);
+    }
+  }, [navigate, location]);
+
+  const handleSubscriptionVerification = async (sessionId) => {
+    try {
+      await verifySubscription(sessionId);
+      // Refetch user data to get updated premium status
+      const userResponse = await getUserData();
+      setUser(userResponse.data);
+    } catch (error) {
+      console.error('Error verifying subscription:', error);
+      setError('Failed to verify subscription. Please contact support.');
     }
   };
 
@@ -72,7 +83,7 @@ const Dashboard = () => {
         } else {
           await createJobApplication(values);
         }
-        fetchApplications();
+        await fetchData(); // Refetch all data after update
         resetForm();
       } catch (error) {
         console.error('Error saving application', error);
@@ -93,7 +104,7 @@ const Dashboard = () => {
     if (window.confirm('Are you sure you want to delete this application?')) {
       try {
         await deleteJobApplication(id);
-        fetchApplications();
+        await fetchData(); // Refetch all data after deletion
       } catch (error) {
         console.error('Error deleting application', error);
         setError('Failed to delete application. Please try again.');
@@ -103,21 +114,6 @@ const Dashboard = () => {
       }
     }
   };
-
-  const getStatusCounts = () => {
-    const counts = {};
-    applications.forEach(app => {
-      counts[app.status] = (counts[app.status] || 0) + 1;
-    });
-    return counts;
-  };
-
-  if (!localStorage.getItem('token')) {
-    navigate('/login');
-    return null;
-  }
-
-  const statusCounts = getStatusCounts();
 
   const renderPremiumFeatures = () => {
     if (user && user.isPremium) {
@@ -142,22 +138,16 @@ const Dashboard = () => {
     }
   };
 
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <h2>Job Applications Dashboard</h2>
       {error && <div className="error">{error}</div>}
 
       {renderPremiumFeatures()}
-
-      <div className="stats">
-        <h3>Application Statistics</h3>
-        <ul>
-          {Object.entries(statusCounts).map(([status, count]) => (
-            <li key={status}>{status}: {count}</li>
-          ))}
-        </ul>
-        <p>Total Applications: {applications.length}</p>
-      </div>
 
       <h3>{editingId ? 'Edit' : 'Add'} Job Application</h3>
       <form onSubmit={formik.handleSubmit}>
